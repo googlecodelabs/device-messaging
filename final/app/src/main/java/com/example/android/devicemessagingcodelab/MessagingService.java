@@ -84,9 +84,6 @@ public class MessagingService extends IntentService {
                 getMessageReadIntent(conversationId),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // Build a RemoteInput for receiving voice input in a Car Notification
-        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY).build();
-
         // Building a Pending Intent for the reply action to trigger
         PendingIntent replyIntent = PendingIntent.getBroadcast(
                 getApplicationContext(),
@@ -95,6 +92,9 @@ public class MessagingService extends IntentService {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         /// TODO: Add the code to create the UnreadConversation
+        // Build a RemoteInput for receiving voice input from devices
+        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY).build();
+
         // Create the UnreadConversation and populate it with the participant name,
         // read and reply intents.
         NotificationCompat.CarExtender.UnreadConversation.Builder unreadConversationBuilder =
@@ -105,8 +105,8 @@ public class MessagingService extends IntentService {
 
         // Note: Add messages from oldest to newest to the UnreadConversation.Builder
         // Since we are sending a single message here we simply add the message.
-        // In a real world application there could be multiple messages which should be ordered
-        // and added from oldest to newest.
+        // In a real world application there could be multiple unread messages which
+        // should be ordered and added from oldest to newest.
         unreadConversationBuilder.addMessage(message);
         /// End create UnreadConversation
 
@@ -121,28 +121,36 @@ public class MessagingService extends IntentService {
         // Add an action to allow replies
         NotificationCompat.Action replyAction =
                 new NotificationCompat.Action.Builder(
-                            R.drawable.ic_reply_white_24dp,
-                            getString(R.string.reply_action),
-                            replyIntent)
+                        R.drawable.ic_reply_white_24dp,
+                        getString(R.string.reply_action),
+                        replyIntent)
+                        /// TODO: Uncomment these two lines to better support Wear
                         .addRemoteInput(remoteInput)
-                        /// TODO: Uncomment after adding WearableExtender to enable inline actions
                         .extend(inlineActionForWear2)
                         .build();
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(R.drawable.notification_icon)
-                .setLargeIcon(BitmapFactory.decodeResource(
-                        getApplicationContext().getResources(), R.drawable.android_contact))
-                .setContentText(message)
-                .setWhen(timestamp)
-                .addAction(replyAction)
-                .setContentTitle(sender)
-                .setContentIntent(readPendingIntent)
-                /// TODO: Extend the notification with CarExtender.
-                .extend(new NotificationCompat.CarExtender()
-                        .setUnreadConversation(unreadConversationBuilder.build()))
-                /// End
-                ;
+        // Add messages with the MessagingStyle notification
+        NotificationCompat.MessagingStyle messagingStyle =
+                new NotificationCompat.MessagingStyle(sender)
+                        .addMessage(message, timestamp, sender);
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(getApplicationContext())
+                        .setStyle(messagingStyle)
+                        .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
+                        .setSmallIcon(R.drawable.notification_icon)
+                        .setLargeIcon(BitmapFactory.decodeResource(
+                                getApplicationContext().getResources(), R.drawable.android_contact))
+                        .setContentText(message)
+                        .setWhen(timestamp)
+                        .addAction(replyAction)
+                        .setContentTitle(sender)
+                        .setContentIntent(readPendingIntent)
+                        /// TODO: Extend the notification with CarExtender.
+                        .extend(new NotificationCompat.CarExtender()
+                                .setUnreadConversation(unreadConversationBuilder.build()))
+                        /// End
+                        ;
 
         Log.d(TAG, "Sending notification " + conversationId + " conversation: " + message);
         NotificationManagerCompat.from(this).notify(conversationId, builder.build());
