@@ -26,7 +26,7 @@ import android.support.v4.app.RemoteInput;
 import android.util.Log;
 
 /**
- * Service that simulates handling an incoming message
+ * Service that simulates handling an incoming message.
  */
 public class MessagingService extends IntentService {
     private static final String TAG = MessagingService.class.getSimpleName();
@@ -77,39 +77,37 @@ public class MessagingService extends IntentService {
             String message,
             long timestamp) {
 
-        // A pending Intent for reads
+        // A pending Intent for reads.
         PendingIntent readPendingIntent = PendingIntent.getBroadcast(
                 getApplicationContext(),
                 conversationId,
                 getMessageReadIntent(conversationId),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // Building a Pending Intent for the reply action to trigger
+        // Building a Pending Intent for the reply action to trigger.
         PendingIntent replyIntent = PendingIntent.getBroadcast(
                 getApplicationContext(),
                 conversationId,
                 getMessageReplyIntent(conversationId),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        /// TODO: Add the code to create the UnreadConversation
-        /// End create UnreadConversation
+        /// TODO: Add the code to create the UnreadConversation.
+        /// End create UnreadConversation.
 
-        /// TODO: Add the code to allow in-line reply on Wear 2.0
-        /// End in-line action for Wear 2.0
+        /// TODO: Add the code to allow in-line reply on Wear 2.0.
+        /// End in-line action for Wear 2.0.
 
-        // Add an action to allow replies
+        // Add an action to allow replies.
         NotificationCompat.Action replyAction =
                 new NotificationCompat.Action.Builder(
                             R.drawable.ic_reply_white_24dp,
                             getString(R.string.reply_action),
                             replyIntent)
-                        /// TODO: Uncomment these two lines to better support Wear
-                        //.addRemoteInput(remoteInput)
-                        //.extend(inlineActionForWear2)
+                        /// TODO: Add better wear support.
                         .build();
 
 
-        // Add messages with the MessagingStyle notification
+        // Add messages with the MessagingStyle notification.
         NotificationCompat.MessagingStyle messagingStyle =
                 new NotificationCompat.MessagingStyle(sender)
                         .addMessage(message, timestamp, sender);

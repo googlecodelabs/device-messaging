@@ -26,7 +26,7 @@ import android.support.v4.app.RemoteInput;
 import android.util.Log;
 
 /**
- * Service that simulates handling an incoming message
+ * Service that simulates handling an incoming message.
  */
 public class MessagingService extends IntentService {
     private static final String TAG = MessagingService.class.getSimpleName();
@@ -77,22 +77,22 @@ public class MessagingService extends IntentService {
             String message,
             long timestamp) {
 
-        // A pending Intent for reads
+        // A pending Intent for reads.
         PendingIntent readPendingIntent = PendingIntent.getBroadcast(
                 getApplicationContext(),
                 conversationId,
                 getMessageReadIntent(conversationId),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // Building a Pending Intent for the reply action to trigger
+        // Building a Pending Intent for the reply action to trigger.
         PendingIntent replyIntent = PendingIntent.getBroadcast(
                 getApplicationContext(),
                 conversationId,
                 getMessageReplyIntent(conversationId),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        /// TODO: Add the code to create the UnreadConversation
-        // Build a RemoteInput for receiving voice input from devices
+        /// TODO: Add the code to create the UnreadConversation.
+        // Build a RemoteInput for receiving voice input from devices.
         RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY).build();
 
         // Create the UnreadConversation and populate it with the participant name,
@@ -103,33 +103,33 @@ public class MessagingService extends IntentService {
                         .setReadPendingIntent(readPendingIntent)
                         .setReplyAction(replyIntent, remoteInput);
 
-        // Note: Add messages from oldest to newest to the UnreadConversation.Builder
+        // Note: Add messages from oldest to newest to the UnreadConversation.Builder.
         // Since we are sending a single message here we simply add the message.
         // In a real world application there could be multiple unread messages which
         // should be ordered and added from oldest to newest.
         unreadConversationBuilder.addMessage(message);
-        /// End create UnreadConversation
+        /// End create UnreadConversation.
 
-        /// TODO: Add the code to allow in-line reply on Wear 2.0
-        // Wear 2.0 allows for in-line actions, which will be used for "reply"
+        /// TODO: Add the code to allow in-line reply on Wear 2.0.
+        // Wear 2.0 allows for in-line actions, which will be used for "reply".
         NotificationCompat.Action.WearableExtender inlineActionForWear2 =
                 new NotificationCompat.Action.WearableExtender()
                         .setHintDisplayActionInline(true)
                         .setHintLaunchesActivity(false);
-        /// End in-line action for Wear 2.0
+        /// End in-line action for Wear 2.0.
 
-        // Add an action to allow replies
+        // Add an action to allow replies.
         NotificationCompat.Action replyAction =
                 new NotificationCompat.Action.Builder(
                         R.drawable.ic_reply_white_24dp,
                         getString(R.string.reply_action),
                         replyIntent)
-                        /// TODO: Uncomment these two lines to better support Wear
+                        /// TODO: Add better wear support.
                         .addRemoteInput(remoteInput)
                         .extend(inlineActionForWear2)
                         .build();
 
-        // Add messages with the MessagingStyle notification
+        // Add messages with the MessagingStyle notification.
         NotificationCompat.MessagingStyle messagingStyle =
                 new NotificationCompat.MessagingStyle(sender)
                         .addMessage(message, timestamp, sender);

@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static final long DELAY_MILLIS = TimeUnit.SECONDS.toMillis(15);
+    public static final long DELAY_MILLIS = TimeUnit.SECONDS.toMillis(10);
     public static final long COUNT_DOWN_INTERVAL = TimeUnit.SECONDS.toMillis(1);
     private TextView mTextView;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static final long DELAY_MILLIS = TimeUnit.SECONDS.toMillis(15);
+    public static final long DELAY_MILLIS = TimeUnit.SECONDS.toMillis(10);
     public static final long COUNT_DOWN_INTERVAL = TimeUnit.SECONDS.toMillis(1);
     private TextView mTextView;
 

@@ -19,6 +19,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
+        <!-- TODO: Add Auto meta-data tag -->
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
